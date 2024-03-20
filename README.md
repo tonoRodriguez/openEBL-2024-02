@@ -1,8 +1,9 @@
 
 # openEBL Design Submissions
 
-- The Canadian Silicon Photonics Foundry, <a href="https://siepic.ca/fabrication/">SiEPICfab</a>, presents the open electron beam lithography (EBL) fabrication process, where former and current students of <a href="https://siepic.ca/education/">SiEPIC</a> workshops and courses can submit their design for manufacturing and testing.
+- The Silicon Electronic Photonics Integrated Circuits (SiEPIC) fabrication program, <a href="https://siepic.ca/fabrication/">SiEPICfab</a>, presents the open electron beam lithography (EBL) fabrication process, where former and current students of <a href="https://siepic.ca/education/">SiEPIC</a> workshops and courses can submit their design for manufacturing and testing.
 - More details about <a href="https://siepic.ca/openEBL/">openEBL</a>.
+- This fabrication run had a deadline of February 10, 2024.
 
 # Fabrication process: Passive Silicon
 ## Technical summary:
@@ -37,7 +38,7 @@ The submission involves several steps. First, you need to create your design(s) 
  - Fork a copy of this GitHub repository into your own account:  <a href="../../fork">Create a new fork</a>.
  - Turn on the GitHub Actions on your forked repository: <a href="../../actions">Actions</a> (In your repository's page on GitHub, click on Actions in the top-menu bar, and Enable the workflows).
  - [Optional] Install GitHub Desktop (or git) on your computer, and Clone a local copy: <a href="x-github-client://openRepo/https://github.com/SiEPIC/openEBL-2024-02">Open with GitHub Desktop</a>
- - Create your design, and ensure that the filename contains your <a href="https://www.edx.org/learn/engineering/university-of-british-columbia-silicon-photonics-design-fabrication-and-data-ana">edX.org</a> username, and be formatted according to the course/workshop as follows:
+ - Create your design, and ensure that the filename contains your <a href="https://www.edx.org/learn/engineering/university-of-british-columbia-silicon-photonics-design-fabrication-and-data-ana">edX.org</a> (or GitHub username if the edX one is a random string that does not contain your name), and be formatted according to the course/workshop as follows:
    - EBeam_username.oas: for the <a href="https://www.edx.org/learn/engineering/university-of-british-columbia-silicon-photonics-design-fabrication-and-data-ana">edX Phot1x silicon photonics design course</a>
    - ELEC413_username.oas: for the <a href="https://ece.ubc.ca/courses/elec-413/">UBC ELEC 413 course</a>
    - SiEPIC_Passives_username.oas: for the <a href="https://www.cmc.ca/passive-silicon-photonics-fabrication-workshop-2023">CMC SiEPIC Passives silicon photonics workshop</a>
@@ -54,6 +55,10 @@ The submission involves several steps. First, you need to create your design(s) 
 
 <img width="1281" alt="image" src="https://github.com/SiEPIC/openEBL-2024-02/assets/15843200/e4785a27-b971-4a64-8796-1e351f30c00e">
 
+## Black-box cells (IP Replacement)
+- We perform IP replacement on several cells (grating couplers). We call these cells Black Box (BB), and you can identify them by _BB in the cell name, or the presence of the Blackbox layer 998/0 in the cell.
+- You must not change the name of the cell, the contents, nor cell origins. Otherwise, the replacement will not work correctly.
+
 ## Automated GitHub Actions
 Optional: The verification and merging is performed using GitHub actions. The repository implements the following:
 1) Running the Python files in the "submissions/KLayout Python" folder, to generate the designs
@@ -63,6 +68,8 @@ Optional: The verification and merging is performed using GitHub actions. The re
 
 ## Latest Merge Layout File
 
+Final layout for fabrication: [D2014_02_13_EBeam.oas](https://github.com/SiEPIC/openEBL-2024-02/raw/main/merge/D2014_02_13_EBeam.oas)
+
 <!-- start-link -->
-https://github.com/SiEPIC/openEBL-2024-02/actions/runs/7851893275/artifacts/1234972748
+https://github.com/SiEPIC/openEBL-2024-02/actions/runs/7897200121/artifacts/1243840168
 <!-- end-link -->

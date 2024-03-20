@@ -1,7 +1,7 @@
 '''
 --- Fabry Perot cavity using Bragg gratings and long multi-mode waveguides ---
    
-by Lukas Chrostowski, 2023
+by Lukas Chrostowski, 2024 
  
 Simple script to
  - create a new layout with a top cell
@@ -97,7 +97,7 @@ for i in range(0,4):
     instGC3 = cell.insert(CellInstArray(cell_ebeam_gc.cell_index(), t))
     
     # automated test label
-    text = Text ("opt_in_TE_1310_device_%s_BraggMMcavity%s" % (designer_name, i), t)
+    text = Text ("opt_in_TE_1310_device_%s_BraggMMcavity%s" % (designer_name, params_BraggN[i]), t)
     cell.shapes(ly.layer(ly.TECHNOLOGY['Text'])).insert(text).text_size = 5/dbu
     
     # Y branches:

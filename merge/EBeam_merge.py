@@ -35,7 +35,8 @@ filename_out = 'EBeam'
 layers_keep = ['1/0','1/10', '68/0', '81/0', '10/0', '99/0', '26/0', '31/0', '32/0', '33/0', '998/0']
 layer_text = '10/0'
 layer_SEM = '200/0'
-layer_SEM_allow = ['edX']  # which submission folder is allowed to include SEM images
+layer_SEM_allow = ['edXphot1x', 'ELEC413','SiEPIC_Passives']  # which submission folder is allowed to include SEM images
+layers_move = [[[31,0],[1,0]]] # move shapes from layer 1 to layer 2
 dbu = 0.001
 log_siepictools = False
 framework_file = 'EBL_Framework_1cm_PCM_static.oas'
@@ -126,17 +127,26 @@ top_cell.insert(CellInstArray(cell_SiEPIC_Passives.cell_index(), t))
 cell_openEBL = layout.create_cell("openEBL")
 top_cell.insert(CellInstArray(cell_openEBL.cell_index(), t))
 
-# Create a date	stamp cell
-cell_date = layout.create_cell('.merged:'+now.strftime("%Y-%m-%d-%H:%M:%S"))
+# Create a date	stamp cell, and add a text label
+merge_stamp = '.merged:'+now.strftime("%Y-%m-%d-%H:%M:%S")
+cell_date = layout.create_cell(merge_stamp)
+text = Text (merge_stamp, Trans(Trans.R0, 0, 0) )
+shape = cell_date.shapes(layout.layer(10,0)).insert(text)
 top_cell.insert(CellInstArray(cell_date.cell_index(), t))   
 
 # Origins for the layouts
 x,y = 0,cell_Height+cell_Gap_Height
 
+import subprocess
+import pandas as pd
 for f in [f for f in files_in if '.oas' in f.lower() or '.gds' in f.lower()]:
-    filedate = datetime.fromtimestamp(os.path.getmtime(f)).strftime("%Y%m%d_%H%M")
-    log("\nLoading: %s, dated %s" % (os.path.basename(f), filedate))
     basefilename = os.path.basename(f)
+    # get the time the file was last updated from the Git repository 
+    a = subprocess.run(['git', '-C', os.path.dirname(f), 'log', '-1', '--pretty=%ci',  basefilename], stdout = subprocess.PIPE) 
+    filedate = pd.to_datetime(str(a.stdout.decode("utf-8"))).strftime("%Y%m%d_%H%M")
+    log("\nLoading: %s, dated %s" % (os.path.basename(f), filedate))
+    # rather than getting it from the disk, which is not correct:
+    #  filedate = datetime.fromtimestamp(os.path.getmtime(f)).strftime("%Y%m%d_%H%M")
   
     # Load layout  
     layout2 = pya.Layout()
@@ -200,7 +210,7 @@ for f in [f for f in files_in if '.oas' in f.lower() or '.gds' in f.lower()]:
             break
 
 
-        if 'ebeam' in cell.name.lower() or num_top_cells == 1:
+        if num_top_cells == 1 or cell.name.lower() == 'top':
             log("  - top cell: %s" % cell.name)
 
             # check layout height
@@ -294,18 +304,31 @@ coords_file.close()
 '''
 
 
+# move layers
+for i in range(0,len(layers_move)):
+    layer1=layout.find_layer(*layers_move[i][0])
+    layer2=layout.find_layer(*layers_move[i][1])
+    layout.move_layer(layer1, layer2)
 
 # Export as-is layout, for UW fabrication
 log('')
 
 #export_layout (top_cell, path, filename='EBeam', relative_path='', format='gds')
-export_layout (top_cell, path, filename='EBeam', relative_path='', format='oas')
+file_out = export_layout (top_cell, path, filename='EBeam', relative_path='', format='oas')
 # log("Layout exported successfully %s: %s" % (save_options.format, file_out) )
 
 
 log("\nExecution time: %s seconds" % int((time.time() - start_time)))
 
 log_file.close()
+
+# Display the layout in KLayout, using KLayout Package "klive", which needs to be installed in the KLayout Application
+try:
+    if Python_Env == 'Script':
+        from SiEPIC.utils import klive
+        klive.show(file_out, technology=tech_name)
+except:
+    pass
 
 print("KLayout EBeam_merge.py, completed in: %s seconds" % int((time.time() - start_time)))
 
